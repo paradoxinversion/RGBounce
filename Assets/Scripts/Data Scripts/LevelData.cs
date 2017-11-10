@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 [System.Serializable]
 public class LevelData 
 {
@@ -39,7 +40,19 @@ public class LevelData
 	public void RemovePlaceableData(PlaceableData placeableData){
 		placeables.Remove (placeableData);
 	}
-
+	public void AddAnimationData(Placeable placeable, AnimatedObjectData animationData){
+		animations.Add (animationData);
+		animationData.placeableID = placeable.ID;
+	}
+	public void RemoveAnimationData(AnimatedObjectData animationData){
+		animations.Remove (animationData);
+	}
+	public void RemoveAnimationData(Placeable placeable){
+		AnimatedObjectData animationData = animations.FirstOrDefault (i => i.placeableID == placeable.ID);
+		if (animationData != null){
+			animations.Remove (animationData);
+		}
+	}
 	public void RenameLevel(string newName){
 		LevelSelectWidget_Editor levelSelect = GameObject.FindObjectOfType<LevelSelectWidget_Editor> ();
 		levelName = newName;

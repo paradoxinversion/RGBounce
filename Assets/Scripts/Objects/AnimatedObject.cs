@@ -55,11 +55,11 @@ public class AnimatedObject : MonoBehaviour
 	{
 		get
 		{
-			return animationData.yDestinastion;
+			return animationData.yDestination;
 		}
 		set
 		{
-			animationData.yDestinastion = value;
+			animationData.yDestination = value;
 		}
 	}
 	public bool useY

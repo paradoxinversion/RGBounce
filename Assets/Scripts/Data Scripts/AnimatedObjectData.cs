@@ -6,9 +6,10 @@ using System.Text;
 [Serializable]
 public class AnimatedObjectData
 {
+	public int placeableID;
 	public float xDestination;
 	public bool useX;
-	public float yDestinastion;
+	public float yDestination;
 	public bool useY;
 	public double movementTime;
 	public float movementDelay;

@@ -25,7 +25,8 @@ public class LevelDetailsWidget : MonoBehaviour {
 	public void btn_SaveLevel(){
 		LevelEditor editor = GameObject.FindObjectOfType<LevelEditor> ();
 		editor.SaveLevelData ();
-
+		LevelSelectWidget_Editor levelSelect = GameObject.FindObjectOfType<LevelSelectWidget_Editor> ();
+		levelSelect.PopulateDropdown ();
 	}
 
 	public void btn_RenameLevel(){

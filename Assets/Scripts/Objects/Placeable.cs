@@ -120,7 +120,6 @@ public class Placeable : MonoBehaviour
 		float posY = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
 		Vector2 pos = new Vector2(Mathf.Round(posX) * LevelEditConfig.gridScaleSize, Mathf.Round(posY) * LevelEditConfig.gridScaleSize) + LevelEditorOffset;
 		transform.position = pos;
-//		LevelEditor.Get().levelEditorUI.objectControls.SetInfo();
 		SetDefaultPosition(transform.position);
 	}
 
@@ -134,17 +133,6 @@ public class Placeable : MonoBehaviour
 		}
 		level.RemovePlaceableData (pData);
 		Destroy (gameObject);
-	}
-	// Use this for initialization
-	void Start ()
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
 	}
 }
 

@@ -71,6 +71,10 @@ public class LevelEditor : MonoBehaviour{
 		CurrentLevel.levelData.AddPlaceableData (newPlaceable.pData);
 		newPlaceable.gameObject.transform.SetParent (CurrentLevel.gameObject.transform);
 		newPlaceable.gameObject.name = placeable.gameObject.name + " " + newPlaceable.pData.ID;
+
+		//Create Animation Object as well
+		AnimatedObjectData animationData = new AnimatedObjectData();
+		CurrentLevel.levelData.AddAnimationData (newPlaceable, animationData);
 		return newPlaceable;
 	}
 
@@ -113,6 +117,7 @@ public class LevelEditor : MonoBehaviour{
 	}
 	public void DeletePlaceable(){
 		CurrentSelection.DeletePlaceable (CurrentLevel.levelData);
+
 	}
 
 	public void SaveLevelData(){
