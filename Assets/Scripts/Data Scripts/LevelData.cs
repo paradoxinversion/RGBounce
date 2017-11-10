@@ -39,5 +39,11 @@ public class LevelData
 	public void RemovePlaceableData(PlaceableData placeableData){
 		placeables.Remove (placeableData);
 	}
+
+	public void RenameLevel(string newName){
+		LevelSelectWidget_Editor levelSelect = GameObject.FindObjectOfType<LevelSelectWidget_Editor> ();
+		levelName = newName;
+		levelSelect.PopulateDropdown ();
+	}
 }
 

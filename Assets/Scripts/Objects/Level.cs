@@ -48,6 +48,10 @@ public class Level : MonoBehaviour
 		EdgeCollider2D killZoneCollider = killZone.AddComponent<EdgeCollider2D> ();
 		killZoneCollider.points = killZoneColliderPoints;
 		killZoneCollider.tag = "killzone";
+
+		edgeColliderObject.transform.SetParent (transform);
+		killZone.transform.SetParent (transform);
+
 	}
 
 	void Update ()

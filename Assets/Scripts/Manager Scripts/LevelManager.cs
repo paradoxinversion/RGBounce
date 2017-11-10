@@ -130,6 +130,7 @@ public static class LevelManager
 	}
 
 	public static void BuildLevel(LevelData levelData){
+		DestroyCurrentLevel ();
 		GameObject levelGameObject = new GameObject ();
 		Level newLevel = levelGameObject.AddComponent<Level> ();
 
@@ -163,6 +164,12 @@ public static class LevelManager
 
 	public static void SetGameLevels(List<LevelData> levels){
 		gameLevels = levels;
+	}
+
+	public static void DestroyCurrentLevel(){
+		if (currentLevelGameObject != null){
+			GameObject.Destroy(currentLevelGameObject.gameObject);	
+		}
 	}
 }
 

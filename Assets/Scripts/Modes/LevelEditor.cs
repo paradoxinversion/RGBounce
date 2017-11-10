@@ -46,6 +46,9 @@ public class LevelEditor : MonoBehaviour{
 	}
 
 	public void CreateNewLevel(){
+		if (CurrentLevel != null){
+			LevelManager.DestroyCurrentLevel ();
+		}
 		GameObject levelGameObject = new GameObject ();
 		Level newLevel = levelGameObject.AddComponent<Level> ();
 		newLevel.InitializeLevelData ();
