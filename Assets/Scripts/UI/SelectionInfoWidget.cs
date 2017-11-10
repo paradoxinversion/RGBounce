@@ -16,7 +16,8 @@ public class SelectionInfoWidget : MonoBehaviour
 	}
 
 	public Text objectName;
-	public Text objectParent;
+	public Text defaultLocation;
+	public Text currentLocation;
 
 	public void UpdateWidget(){
 		if (SelectedObject != null){
@@ -27,18 +28,14 @@ public class SelectionInfoWidget : MonoBehaviour
 	}
 
 	public void RenderPlacable(){
+		Vector2 originalPosition = SelectedObject.pData.ReturnOriginalPosition ();
 		objectName.text = SelectedObject.gameObject.name;
-		if (SelectedObject.pData.ParentID != -1){
-			//TODO Change this to the name of the gameobject that is the parent
-			objectParent.text = SelectedObject.pData.ParentID.ToString();
-		}else{
-			objectParent.text = "No Parent";
-		}
+		defaultLocation.text = string.Format ("Default: ({0}, {1})", originalPosition.x, originalPosition.y);
+		currentLocation.text = string.Format ("Current: ({0}, {1})", SelectedObject.transform.position.x, SelectedObject.transform.position.y);
 	}
 
 	public void RenderNoPlaceable(){
 		objectName.text = "No Placeable Selected";
-		objectParent.text = "";
 	}
 
 	void Update(){

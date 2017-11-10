@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 public class LevelEditor : MonoBehaviour{
-	public Level currentLevel;
-	private Placeable[] placeables;
+	public Level CurrentLevel{
+		get {
+			return LevelManager.currentLevelGameObject;
+		}
+	}
+
 	public Placeable[] Placeables{
 		get {
-			if (placeables == null || placeables.Length == 0){
-				LoadPlaceables ();
-			}
-			return placeables;
+			return LevelManager.Placeables;
 		}
-
 	}
+
 	private Placeable currentSelection;
 	public Placeable CurrentSelection{
 		get {
@@ -25,9 +26,23 @@ public class LevelEditor : MonoBehaviour{
 			return parentModeEnabled;
 		}
 	}
+	void Start(){
+		DataPersistence.LoadLevelData ();
+		GameObject.FindObjectOfType< LevelSelectWidget_Editor> ().PopulateDropdown ();
+		if (LevelManager.GameLevels.Count > 0){
+			LoadLevel (LevelManager.GameLevels [0]);
+		}else{
+			CreateNewLevel ();
+		}
+
+
+	}
+	void Update(){
+		HandleKeys ();
+	}
 	public void ClearLevel(){
-		Destroy (currentLevel);
-		currentLevel = null;
+		Destroy (CurrentLevel);
+		LevelManager.SetLevel(null);
 	}
 
 	public void CreateNewLevel(){
@@ -35,28 +50,11 @@ public class LevelEditor : MonoBehaviour{
 		Level newLevel = levelGameObject.AddComponent<Level> ();
 		newLevel.InitializeLevelData ();
 		levelGameObject.name = levelGameObject.GetComponent<Level> ().levelData.levelName;
-		currentLevel = newLevel;
-		currentLevel.GenerateEdgeColliders ();
+		LevelManager.SetLevel(newLevel);
+		CurrentLevel.GenerateEdgeColliders ();
 		levelGameObject.tag = "level";
 	}
 
-	public void LoadPlaceables(){
-		List<Placeable> placeableGameObjects = new List<Placeable> ();
-
-		foreach (var placeableGO in GameResources.LoadPlaceables()){
-			Placeable placeable;
-			if (placeableGO.GetComponent<Placeable>() == null){
-				placeable = placeableGO.AddComponent<Placeable> ();
-				PlaceableData pleaceableData = new PlaceableData (placeableGO.name);
-				placeable.SetData (pleaceableData);
-			}else{
-				placeable = placeableGO.GetComponent<Placeable> ();
-			}
-
-			placeableGameObjects.Add (placeable);
-		}
-		placeables = placeableGameObjects.ToArray();
-	}
 
 	/// <summary>
 	/// Paints the placeable.
@@ -67,21 +65,20 @@ public class LevelEditor : MonoBehaviour{
 		float y = Mathf.Round(Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
 		Placeable newPlaceable = Instantiate (placeable, new Vector2(x, y), Quaternion.identity);
 		newPlaceable.SetData(new PlaceableData (placeable.name));
-		currentLevel.levelData.AddPlaceableData (newPlaceable.pData);
-		newPlaceable.gameObject.transform.SetParent (currentLevel.gameObject.transform);
+		CurrentLevel.levelData.AddPlaceableData (newPlaceable.pData);
+		newPlaceable.gameObject.transform.SetParent (CurrentLevel.gameObject.transform);
 		newPlaceable.gameObject.name = placeable.gameObject.name + " " + newPlaceable.pData.ID;
 		return newPlaceable;
 	}
-	void Start(){
-		CreateNewLevel ();
-	}
+
 	void HandleKeys(){
 		if (Input.GetKeyDown(KeyCode.A)){
 			PlaceablePaintWidget placeableWidget = GameObject.FindObjectOfType<PlaceablePaintWidget> ();
 			if (placeableWidget.enabled && placeableWidget.paintEnabled.isOn){
-				Placeable newPlaceable = PaintPlaceable (placeables[placeableWidget.placeableSelect.value]);
+				Placeable newPlaceable = PaintPlaceable (Placeables[placeableWidget.placeableSelect.value]);
 				if (newPlaceable != null){
 					currentSelection = newPlaceable;
+					newPlaceable.pData.SetOriginalPosition (newPlaceable.transform.position);
 				}
 			}
 		} else if (Input.GetKeyDown(KeyCode.Backspace)){
@@ -112,9 +109,17 @@ public class LevelEditor : MonoBehaviour{
 		placeable.pData.ClearParent ();
 	}
 	public void DeletePlaceable(){
-		CurrentSelection.DeletePlaceable (currentLevel.levelData);
+		CurrentSelection.DeletePlaceable (CurrentLevel.levelData);
 	}
-	void Update(){
-		HandleKeys ();
+
+	public void SaveLevelData(){
+		LevelManager.AddGameLevel (CurrentLevel.levelData);
+		DataPersistence.SaveLevelData ();
 	}
+
+	public void LoadLevel(LevelData data){
+		LevelManager.BuildLevel (data);
+	}
+		
+
 }

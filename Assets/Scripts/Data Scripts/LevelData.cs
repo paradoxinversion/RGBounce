@@ -26,7 +26,11 @@ public class LevelData
 		placeables = new List<PlaceableData> ();
 		animations = new List<AnimatedObjectData> ();
 	}
-
+	public LevelData(LevelData data){
+		levelName = data.levelName;
+		placeables = data.placeables;
+		animations = data.animations;
+	}
 	public void AddPlaceableData(PlaceableData placeableData){
 		placeables.Add (placeableData);
 		placeableData.ID = totalCreatedObjects;

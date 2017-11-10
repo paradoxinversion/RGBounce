@@ -13,9 +13,14 @@ public class Level : MonoBehaviour
 	}
 
 	public LevelData InitializeLevelData(){
-		return levelData = new LevelData ();
+		levelData = new LevelData ();
+		return levelData;
 	}
-
+	public LevelData InitializeLevelData(LevelData levelData){
+		Debug.Log ("Setting Level Data");
+		this.levelData = levelData;
+		return levelData;
+	}
 	/// <summary>
 	/// Creates wall and ceiling colliders, as well as a killzone floor collider
 	/// </summary>
