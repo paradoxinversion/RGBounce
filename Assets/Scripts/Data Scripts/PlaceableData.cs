@@ -29,8 +29,15 @@ public class PlaceableData
         get { return id; }
         set { id = value; }
     }
-    public int objectType = -1;
-    [SerializeField] private float originalPositionX = 0;
+
+	private AnimatedObjectData animationData;
+	public AnimatedObjectData AnimationData{
+		get {
+			return animationData;
+		}
+	}
+
+	[SerializeField] private float originalPositionX = 0;
     [SerializeField] private float originalPositionY = 0;
 
     [SerializeField] private float originalRotationW = 0;
@@ -57,6 +64,7 @@ public class PlaceableData
 		ObstacleName = name;
         id = -1;
         parentID = -1;
+		animationData = new AnimatedObjectData ();
     }
     public void SetParentID(int newParentID)
     {
@@ -104,6 +112,10 @@ public class PlaceableData
 		SetOriginalPosition (new Vector2(currentPositionX, currentPositionY));
 		SetOriginalScale (new Vector2 (currentScaleX, currentScaleY));
 		SetOriginalRotation (new Quaternion (currentRotationX, currentRotationY, currentRotationZ, currentRotationW));
+	}
+
+	public void SetAnimationData(AnimatedObjectData newAnimationData){
+		animationData = newAnimationData;
 	}
 }
 

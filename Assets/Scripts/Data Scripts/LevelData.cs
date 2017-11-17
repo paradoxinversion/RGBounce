@@ -7,7 +7,7 @@ public class LevelData
 {
 	public string levelName;
 	public List<PlaceableData> placeables = new List<PlaceableData>();
-	public List<AnimatedObjectData> animations = new List<AnimatedObjectData>();
+//	public List<AnimatedObjectData> animations = new List<AnimatedObjectData>();
 	private int totalCreatedObjects;
 	public int TotalCreatedObjects{
 		get {
@@ -25,12 +25,12 @@ public class LevelData
 	public LevelData(string name = "New Level"){
 		levelName = name;
 		placeables = new List<PlaceableData> ();
-		animations = new List<AnimatedObjectData> ();
+//		animations = new List<AnimatedObjectData> ();
 	}
 	public LevelData(LevelData data){
 		levelName = data.levelName;
 		placeables = data.placeables;
-		animations = data.animations;
+//		animations = data.animations;
 	}
 	public void AddPlaceableData(PlaceableData placeableData){
 		placeables.Add (placeableData);
@@ -39,19 +39,6 @@ public class LevelData
 	}
 	public void RemovePlaceableData(PlaceableData placeableData){
 		placeables.Remove (placeableData);
-	}
-	public void AddAnimationData(Placeable placeable, AnimatedObjectData animationData){
-		animations.Add (animationData);
-		animationData.placeableID = placeable.ID;
-	}
-	public void RemoveAnimationData(AnimatedObjectData animationData){
-		animations.Remove (animationData);
-	}
-	public void RemoveAnimationData(Placeable placeable){
-		AnimatedObjectData animationData = animations.FirstOrDefault (i => i.placeableID == placeable.ID);
-		if (animationData != null){
-			animations.Remove (animationData);
-		}
 	}
 	public void RenameLevel(string newName){
 		LevelSelectWidget_Editor levelSelect = GameObject.FindObjectOfType<LevelSelectWidget_Editor> ();

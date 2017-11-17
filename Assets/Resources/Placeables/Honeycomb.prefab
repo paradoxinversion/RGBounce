@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114335111714826772}
   m_Layer: 0
   m_Name: Honeycomb
-  m_TagString: Untagged
+  m_TagString: placeable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+public enum LevelAnimationStatus{
+	STOPPED_OR_NONE,
+	RUNNING,
+	PAUSED
+}
 public class Level : MonoBehaviour
 {
 	public Paddle paddle;
 	public const float PaddleYPosition = 0.05f;
 	public LevelData levelData;
+	public LevelAnimationStatus animationStatus = LevelAnimationStatus.STOPPED_OR_NONE;
 	public void LoadPaddle(){
 		float adjustedY = Camera.main.ViewportToWorldPoint ( new Vector3(transform.position.x, PaddleYPosition, transform.position.z)).y;
 
@@ -53,7 +58,44 @@ public class Level : MonoBehaviour
 		killZone.transform.SetParent (transform);
 
 	}
+	public void StartPlaceableAnimations(){
+		GameObject[] placeables = GameObject.FindGameObjectsWithTag ("placeable");
+		foreach(var placeable in placeables){
+			AnimatedObject animatedObject = placeable.GetComponent<AnimatedObject> ();
+//			if (animatedObject == null){
+//				animatedObject = placeable.AddComponent<AnimatedObject> ();
+//				animatedObject.SetData (placeable.GetComponent<Placeable> ().pData.AnimationData);
+//			}
+			animatedObject.StartAnimation ();
+		}
+		animationStatus = LevelAnimationStatus.RUNNING;
+	}
 
+	public void StopPlaceableAnimations(){
+		GameObject[] placeables = GameObject.FindGameObjectsWithTag ("placeable");
+		foreach(var placeable in placeables){
+			AnimatedObject animatedObject = placeable.GetComponent<AnimatedObject> ();
+			animatedObject.StopAnimationAndReset ();
+		}
+		animationStatus = LevelAnimationStatus.STOPPED_OR_NONE;
+	}
+	public void PausePlaceableAnimations(){
+		GameObject[] placeables = GameObject.FindGameObjectsWithTag ("placeable");
+		foreach(var placeable in placeables){
+			AnimatedObject animatedObject = placeable.GetComponent<AnimatedObject> ();
+			animatedObject.PauseAnimation ();
+		}
+		animationStatus = LevelAnimationStatus.PAUSED;
+	}
+
+	public void ResumePlaceableAnimations(){
+		GameObject[] placeables = GameObject.FindGameObjectsWithTag ("placeable");
+		foreach(var placeable in placeables){
+			AnimatedObject animatedObject = placeable.GetComponent<AnimatedObject> ();
+			animatedObject.ResumeAnimation ();
+		}
+		animationStatus = LevelAnimationStatus.RUNNING;
+	}
 	void Update ()
 	{
 	}

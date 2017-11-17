@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114995745110149000}
   m_Layer: 0
   m_Name: Triangle
-  m_TagString: Untagged
+  m_TagString: placeable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

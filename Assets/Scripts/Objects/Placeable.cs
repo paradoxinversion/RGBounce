@@ -96,7 +96,9 @@ public class Placeable : MonoBehaviour
 
 	private void OnMouseDown(){
 		LevelEditor editor = GameObject.FindObjectOfType<LevelEditor> ();
+		AnimationControlsWidget animationControls = GameObject.FindObjectOfType<AnimationControlsWidget> ();
 		if (editor != null){
+			
 			if (editor.ParentModeEnabled){
 				// If parenting is enabled...
 				editor.SetPlaceableParent(editor.CurrentSelection, this);
@@ -104,6 +106,10 @@ public class Placeable : MonoBehaviour
 				editor.SetParentMode (false);
 			}else{
 				editor.SetSelection (this);
+			}
+
+			if (animationControls != null){
+				animationControls.SetInputs ();
 			}
 
 		}

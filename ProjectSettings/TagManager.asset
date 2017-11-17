@@ -6,6 +6,7 @@ TagManager:
   tags:
   - killzone
   - level
+  - placeable
   layers:
   - Default
   - TransparentFX

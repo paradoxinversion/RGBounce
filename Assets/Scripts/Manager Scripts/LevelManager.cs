@@ -147,7 +147,7 @@ public static class LevelManager
 			placeableGO.transform.position = placeable.ReturnOriginalPosition ();
 //			placeableGOS.Add(placeableGO);
 			placeableGO.GetComponent<Placeable>().SetData(placeable);
-//			placeableGO.GetComponent<AnimatedObject>().SetData(ActiveLevel.animations[ActiveLevel.placeables.IndexOf(placeableGO.GetComponent<Placeable>().pData)]);
+			placeableGO.GetComponent<AnimatedObject>().SetData(placeableGO.pData.AnimationData);
 //			if (placeableGO.GetComponent<PassableObstacle>() != null)
 //			{
 //				placeableGO.GetComponent<PassableObstacle>().SetData(ActiveLevel.passableObjectDataLink[placeable]);

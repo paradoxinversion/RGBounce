@@ -72,9 +72,9 @@ public class LevelEditor : MonoBehaviour{
 		newPlaceable.gameObject.transform.SetParent (CurrentLevel.gameObject.transform);
 		newPlaceable.gameObject.name = placeable.gameObject.name + " " + newPlaceable.pData.ID;
 
-		//Create Animation Object as well
-		AnimatedObjectData animationData = new AnimatedObjectData();
-		CurrentLevel.levelData.AddAnimationData (newPlaceable, animationData);
+//		//Create Animation Object as well
+//		AnimatedObjectData animationData = new AnimatedObjectData();
+//		CurrentLevel.levelData.AddAnimationData (newPlaceable, animationData);
 		return newPlaceable;
 	}
 
@@ -83,12 +83,15 @@ public class LevelEditor : MonoBehaviour{
 			PlaceablePaintWidget placeableWidget = GameObject.FindObjectOfType<PlaceablePaintWidget> ();
 			if (placeableWidget.enabled && placeableWidget.paintEnabled.isOn){
 				Placeable newPlaceable = PaintPlaceable (Placeables[placeableWidget.placeableSelect.value]);
+				AnimatedObject animation = newPlaceable.gameObject.AddComponent<AnimatedObject> ();
+				animation.SetData (new AnimatedObjectData ());
+
 				if (newPlaceable != null){
 					currentSelection = newPlaceable;
 					newPlaceable.pData.SetOriginalPosition (newPlaceable.transform.position);
 				}
 			}
-		} else if (Input.GetKeyDown(KeyCode.Backspace)){
+		} else if (Input.GetKeyDown(KeyCode.D)){
 			if (currentSelection != null){
 				DeletePlaceable ();
 			}
