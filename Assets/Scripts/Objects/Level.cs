@@ -11,6 +11,12 @@ public class Level : MonoBehaviour
 	public const float PaddleYPosition = 0.05f;
 	public LevelData levelData;
 	public LevelAnimationStatus animationStatus = LevelAnimationStatus.STOPPED_OR_NONE;
+	private float cameraSize = 5.0f;
+	public float CameraSize{
+		get {
+			return cameraSize;
+		}
+	}
 	public void LoadPaddle(){
 		float adjustedY = Camera.main.ViewportToWorldPoint ( new Vector3(transform.position.x, PaddleYPosition, transform.position.z)).y;
 

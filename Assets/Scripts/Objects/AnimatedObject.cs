@@ -4,18 +4,16 @@ using System.Collections;
 
 public class AnimatedObject : MonoBehaviour
 {
-	[SerializeField]
-	private AnimatedObjectData _animationData;
+	private PlaceableData _placeableData;
+//	[SerializeField]
+//	private AnimatedObjectData _animationData;
 	public AnimatedObjectData animationData
 	{
 		get
 		{
-			return _animationData;
+			return _placeableData.AnimationData;
 		}
-		set
-		{
-			_animationData = value;
-		}
+
 	}
 	public enum RotationTypes
 	{
@@ -267,9 +265,9 @@ public class AnimatedObject : MonoBehaviour
 	{
 		iTween.Resume(gameObject);
 	}
-	public void SetData(AnimatedObjectData animationData)
+	public void SetData(PlaceableData placeableData)
 	{
-		this.animationData = animationData;
+		this._placeableData = placeableData;
 	}
 
 }

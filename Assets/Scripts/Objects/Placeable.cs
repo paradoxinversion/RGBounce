@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Placeable : MonoBehaviour
 {
+	[SerializeField]
 	PlaceableData _pData;
 	public PlaceableData pData
 	{

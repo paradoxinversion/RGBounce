@@ -33,22 +33,30 @@ public static class LevelManager
 			return currentLevelGameObject.levelData;
 		}
 	}
+
+	/// <summary>
+	/// Loads Placeables from the resources folder.
+	/// </summary>
 	public static void LoadPlaceables(){
-		List<Placeable> placeableGameObjects = new List<Placeable> ();
+		if (placeables == null || placeables.Length == 0){
+			Debug.Log ("Loading game Placeables");
+			List<Placeable> placeableGameObjects = new List<Placeable> ();
 
-		foreach (var placeableGO in GameResources.LoadPlaceables()){
-			Placeable placeable;
-			if (placeableGO.GetComponent<Placeable>() == null){
-				placeable = placeableGO.AddComponent<Placeable> ();
-				PlaceableData pleaceableData = new PlaceableData (placeableGO.name);
-				placeable.SetData (pleaceableData);
-			}else{
-				placeable = placeableGO.GetComponent<Placeable> ();
+			foreach (var placeableGO in GameResources.LoadPlaceables()){
+				Placeable placeable;
+				if (placeableGO.GetComponent<Placeable>() == null){
+					placeable = placeableGO.AddComponent<Placeable> ();
+					PlaceableData pleaceableData = new PlaceableData (placeableGO.name);
+					placeable.SetData (pleaceableData);
+				}else{
+					placeable = placeableGO.GetComponent<Placeable> ();
+				}
+
+				placeableGameObjects.Add (placeable);
 			}
-
-			placeableGameObjects.Add (placeable);
+			placeables = placeableGameObjects.ToArray();
 		}
-		placeables = placeableGameObjects.ToArray();
+
 	}
 
 	public static void SaveLevelData()
@@ -131,6 +139,7 @@ public static class LevelManager
 
 	public static void BuildLevel(LevelData levelData){
 		DestroyCurrentLevel ();
+		LoadPlaceables ();
 		GameObject levelGameObject = new GameObject ();
 		Level newLevel = levelGameObject.AddComponent<Level> ();
 
@@ -145,9 +154,9 @@ public static class LevelManager
 			Placeable placeablePrototype = placeables.FirstOrDefault (p => p.name == placeable.typeStr);
 			Placeable placeableGO = GameObject.Instantiate(placeablePrototype, currentLevelGameObject.transform);
 			placeableGO.transform.position = placeable.ReturnOriginalPosition ();
-//			placeableGOS.Add(placeableGO);
 			placeableGO.GetComponent<Placeable>().SetData(placeable);
-			placeableGO.GetComponent<AnimatedObject>().SetData(placeableGO.pData.AnimationData);
+			placeableGO.gameObject.AddComponent<AnimatedObject>().SetData(placeableGO.pData);
+//			placeableGO.GetComponent<AnimatedObject>().SetData(placeableGO.pData.AnimationData);
 //			if (placeableGO.GetComponent<PassableObstacle>() != null)
 //			{
 //				placeableGO.GetComponent<PassableObstacle>().SetData(ActiveLevel.passableObjectDataLink[placeable]);

@@ -29,7 +29,7 @@ public class PlaceableData
         get { return id; }
         set { id = value; }
     }
-
+	[SerializeField]
 	private AnimatedObjectData animationData;
 	public AnimatedObjectData AnimationData{
 		get {

@@ -265,6 +265,7 @@ public class AnimationControlsWidget : MonoBehaviour
 
 		movementLoopTypeDropdown.AddOptions(loopTypes);
 		rotationLoopTypeDropdown.AddOptions(loopTypes);
+
 	}
 
 	public void btn_PauseAnimation(){
