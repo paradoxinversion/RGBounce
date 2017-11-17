@@ -6,7 +6,7 @@ using System.Text;
 [Serializable]
 public class AnimatedObjectData
 {
-	public int placeableID;
+//	public int placeableID;
 	public float xDestination;
 	public bool useX;
 	public float yDestination;

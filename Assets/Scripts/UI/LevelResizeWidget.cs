@@ -5,11 +5,11 @@ public class LevelResizeWidget : MonoBehaviour
 {
 	public void btn_GrowLevelArea(){
 		LevelEditor editor = GameObject.FindObjectOfType<LevelEditor> ();
-		Camera.main.orthographicSize = Camera.main.orthographicSize + editor.CameraSizeStep;
+		editor.GrowLevelArea ();
 	}
 	public void btn_ShrinkLevelArea(){
 		LevelEditor editor = GameObject.FindObjectOfType<LevelEditor> ();
-		Camera.main.orthographicSize = Camera.main.orthographicSize - editor.CameraSizeStep;
+		editor.ShrinkLevelArea ();
 	}
 }
 

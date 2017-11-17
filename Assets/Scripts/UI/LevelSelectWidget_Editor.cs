@@ -8,7 +8,6 @@ public class LevelSelectWidget_Editor : MonoBehaviour
 	// Use this for initialization
 	void OnEnable ()
 	{
-//		PopulateDropdown ();
 	}
 	
 	// Update is called once per frame
@@ -31,7 +30,9 @@ public class LevelSelectWidget_Editor : MonoBehaviour
 	}
 
 	public void LoadSelection(){
-		LevelManager.BuildLevel (LevelManager.GameLevels [levelDropdown.value]);
+		LevelEditor editor = GameObject.FindObjectOfType<LevelEditor> ();
+		editor.LoadLevel (LevelManager.GameLevels [levelDropdown.value]);
+//		LevelManager.BuildLevel (LevelManager.GameLevels [levelDropdown.value]);
 	}
 }
 

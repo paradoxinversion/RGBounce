@@ -15,6 +15,7 @@ public class PlaceableData
     /// <summary>
     /// ID of the Placeable this one is the child of
     /// </summary>
+	[SerializeField]
     private int parentID = -1;
     public int ParentID
     {
@@ -23,6 +24,7 @@ public class PlaceableData
             return parentID;
         }
     }
+	[SerializeField]
     private int id = -1;
     public int ID
     {

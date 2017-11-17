@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 public class LevelEditor : MonoBehaviour{
+	/// <summary>
+	/// Returns a reference to the Level Manager's current level.
+	/// </summary>
+	/// <value>The current level.</value>
 	public Level CurrentLevel{
 		get {
 			return LevelManager.currentLevelGameObject;
 		}
 	}
 
+	/// <summary>
+	/// Returns a reference to all Placeable prototypes loaded in the Level Manager.
+	/// </summary>
+	/// <value>The placeables.</value>
 	public Placeable[] Placeables{
 		get {
 			return LevelManager.Placeables;
@@ -15,6 +23,7 @@ public class LevelEditor : MonoBehaviour{
 	}
 
 	private Placeable currentSelection;
+	// Returns a reference to the currently selected Placeable instance in the Level Editor.
 	public Placeable CurrentSelection{
 		get {
 			return currentSelection;
@@ -63,24 +72,37 @@ public class LevelEditor : MonoBehaviour{
 		HandleKeys ();
 	}
 
-	public void ClearLevel(){
-		Destroy (CurrentLevel);
-		LevelManager.SetLevel(null);
-	}
+//	public void ClearLevel(){
+//		Destroy (CurrentLevel);
+//		LevelManager.SetLevel(null);
+//	}
 
+	/// <summary>
+	/// Creates a new level GameObject with default level data.
+	/// </summary>
 	public void CreateNewLevel(){
 		if (CurrentLevel != null){
 			LevelManager.DestroyCurrentLevel ();
 		}
-		GameObject levelGameObject = new GameObject ();
-		Level newLevel = levelGameObject.AddComponent<Level> ();
+		GameObject levelGameObject = LevelManager.CreateLevelBase();
+		Level newLevel = levelGameObject.GetComponent<Level>();
 		newLevel.InitializeLevelData ();
-		levelGameObject.name = levelGameObject.GetComponent<Level> ().levelData.levelName;
+		newLevel.gameObject.name = newLevel.levelData.levelName;
 		LevelManager.SetLevel(newLevel);
-		CurrentLevel.GenerateEdgeColliders ();
-		levelGameObject.tag = "level";
+		newLevel.SetCameraSize ();
 	}
-		
+
+	public void GrowLevelArea(){
+		float currentSize = CurrentLevel.levelData.CameraSize;
+		Camera.main.orthographicSize = currentSize + CameraSizeStep;
+		CurrentLevel.levelData.SetCameraSize (Camera.main.orthographicSize);
+	}
+	public void ShrinkLevelArea(){
+		float currentSize = CurrentLevel.levelData.CameraSize;
+		Camera.main.orthographicSize = currentSize - CameraSizeStep;
+		CurrentLevel.levelData.SetCameraSize (Camera.main.orthographicSize);
+
+	}
 	/// <summary>
 	/// Paints the placeable.
 	/// </summary>
@@ -92,7 +114,7 @@ public class LevelEditor : MonoBehaviour{
 		Placeable newPlaceable = Instantiate (placeable, new Vector2(x, y), Quaternion.identity);
 		newPlaceable.SetData(new PlaceableData (placeable.name));
 		CurrentLevel.levelData.AddPlaceableData (newPlaceable.pData);
-		newPlaceable.gameObject.transform.SetParent (CurrentLevel.gameObject.transform);
+		newPlaceable.gameObject.transform.SetParent (GameObject.FindGameObjectWithTag("placeable container").transform);
 		newPlaceable.gameObject.name = placeable.gameObject.name + " " + newPlaceable.pData.ID;
 		AnimatedObject animation = newPlaceable.gameObject.AddComponent<AnimatedObject> ();
 		animation.SetData (newPlaceable.pData);
@@ -103,13 +125,16 @@ public class LevelEditor : MonoBehaviour{
 	void HandleKeys(){
 		if (Input.GetKeyDown(KeyCode.A)){
 			PlaceablePaintWidget placeableWidget = GameObject.FindObjectOfType<PlaceablePaintWidget> ();
-			if (placeableWidget.enabled && placeableWidget.paintEnabled.isOn){
-				Placeable newPlaceable = PaintPlaceable (Placeables[placeableWidget.placeableSelect.value]);
-				if (newPlaceable != null){
-					currentSelection = newPlaceable;
-					newPlaceable.pData.SetOriginalPosition (newPlaceable.transform.position);
+			if (placeableWidget != null){
+				if (placeableWidget.gameObject.activeInHierarchy && placeableWidget.paintEnabled.isOn){
+					Placeable newPlaceable = PaintPlaceable (Placeables[placeableWidget.placeableSelect.value]);
+					if (newPlaceable != null){
+						currentSelection = newPlaceable;
+						newPlaceable.pData.SetOriginalPosition (newPlaceable.transform.position);
+					}
 				}
 			}
+
 		} else if (Input.GetKeyDown(KeyCode.D)){
 			if (currentSelection != null){
 				DeletePlaceable ();
@@ -168,7 +193,7 @@ public class LevelEditor : MonoBehaviour{
 	}
 
 	public void LoadLevel(LevelData data){
-		LevelManager.BuildLevel (data);
+		StartCoroutine(LevelManager.CreateLevel(data));
 	}
 
 	public void SetObjectScaleStep(float newScaleStep){

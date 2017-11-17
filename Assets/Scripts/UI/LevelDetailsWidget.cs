@@ -20,7 +20,8 @@ public class LevelDetailsWidget : MonoBehaviour {
 		UpdateWidget ();
 	}
 	void UpdateWidget(){
-		levelLabel.text = LevelManager.ActiveLevel.levelName;
+		if (LevelManager.ActiveLevel != null)
+			levelLabel.text = LevelManager.ActiveLevel.levelName;
 	}
 	public void btn_SaveLevel(){
 		LevelEditor editor = GameObject.FindObjectOfType<LevelEditor> ();

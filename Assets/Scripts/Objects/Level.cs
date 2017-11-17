@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 public enum LevelAnimationStatus{
 	STOPPED_OR_NONE,
 	RUNNING,
@@ -11,22 +12,33 @@ public class Level : MonoBehaviour
 	public const float PaddleYPosition = 0.05f;
 	public LevelData levelData;
 	public LevelAnimationStatus animationStatus = LevelAnimationStatus.STOPPED_OR_NONE;
-	private float cameraSize = 5.0f;
-	public float CameraSize{
-		get {
-			return cameraSize;
+
+	public void SetCameraSize(){
+		if (levelData != null){
+			Camera.main.orthographicSize = levelData.CameraSize;
 		}
 	}
+
 	public void LoadPaddle(){
 		float adjustedY = Camera.main.ViewportToWorldPoint ( new Vector3(transform.position.x, PaddleYPosition, transform.position.z)).y;
 
 		paddle = Instantiate(GameResources.GetPaddle (), new Vector3(0, adjustedY, transform.position.z), Quaternion.identity) as Paddle;
 	}
 
+	/// <summary>
+	/// Creates a new LevelData instance with default values.
+	/// </summary>
+	/// <returns>The level data.</returns>
 	public LevelData InitializeLevelData(){
 		levelData = new LevelData ();
 		return levelData;
 	}
+
+	/// <summary>
+	/// Sets LevelData equal to the data provided.
+	/// </summary>
+	/// <returns>The level data.</returns>
+	/// <param name="levelData">Level data.</param>
 	public LevelData InitializeLevelData(LevelData levelData){
 		Debug.Log ("Setting Level Data");
 		this.levelData = levelData;
@@ -62,7 +74,6 @@ public class Level : MonoBehaviour
 
 		edgeColliderObject.transform.SetParent (transform);
 		killZone.transform.SetParent (transform);
-
 	}
 	public void StartPlaceableAnimations(){
 		GameObject[] placeables = GameObject.FindGameObjectsWithTag ("placeable");
@@ -102,6 +113,14 @@ public class Level : MonoBehaviour
 		}
 		animationStatus = LevelAnimationStatus.RUNNING;
 	}
+	public Placeable GetPleaceableByID(int id)
+	{
+		return GameObject.FindObjectsOfType<Placeable>().FirstOrDefault(e => e.ID == e.ID);
+	}
+
+//	public void ConnectChildren(){
+//		LevelManager.AppendChildren (this);
+//	}
 	void Update ()
 	{
 	}

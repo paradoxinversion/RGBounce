@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,12 @@ public static class LevelManager
 	{
 		get
 		{
-			return currentLevelGameObject.levelData;
+			if (currentLevelGameObject != null){
+				return currentLevelGameObject.levelData;
+			} else{
+				return null;
+			}
+
 		}
 	}
 
@@ -87,8 +93,6 @@ public static class LevelManager
 		}
 	}
 
-	
-
 	/// <summary>
 	/// Changes a level's index in the list. Bumps Everything forward
 	/// </summary>
@@ -112,55 +116,62 @@ public static class LevelManager
 
 		DataPersistence.SaveLevelData();
 	}
+
 	public static void SetLevel(Level level){
 		currentLevelGameObject = level;
 	}
-	public static GameObject GetPleaceableByID(int id)
-	{
-		//
-		//
-		//
-		//
-		//
-		//
-		//
-		//
 
-		//This needs to be changed, indexes are no longer used in favor of typeStr
-		foreach (var placeable in GameObject.FindObjectsOfType<Placeable>().ToList())
-		{
-			if (placeable.ID == id)
-			{
-				return placeable.gameObject;
-			}
-		}
-		return null;
-	}
-
-	public static void BuildLevel(LevelData levelData){
-		DestroyCurrentLevel ();
-		LoadPlaceables ();
-		GameObject levelGameObject = new GameObject ();
+	public static GameObject CreateLevelBase(){
+		GameObject levelGameObject = new GameObject ("Base Level");
+		levelGameObject.tag = "level";
 		Level newLevel = levelGameObject.AddComponent<Level> ();
 
-		newLevel.InitializeLevelData (levelData);
-		LevelManager.SetLevel(newLevel);
-		newLevel.GenerateEdgeColliders ();
-		levelGameObject.tag = "level";
-		currentLevelGameObject = newLevel;
+		GameObject placeableContainer = new GameObject ("Placeable Container");
+		placeableContainer.tag = "placeable container";
+		placeableContainer.transform.SetParent (levelGameObject.transform);
 
-		foreach (var placeable in ActiveLevel.placeables)
+		newLevel.GenerateEdgeColliders ();
+		return levelGameObject;
+	}
+
+	public static void BuildLevelPlaceables(Level level){
+		Transform placeableContainer = GameObject.FindGameObjectWithTag ("placeable container").transform;
+		foreach (var placeable in level.levelData.placeables)
 		{
 			Placeable placeablePrototype = placeables.FirstOrDefault (p => p.name == placeable.typeStr);
-			Placeable placeableGO = GameObject.Instantiate(placeablePrototype, currentLevelGameObject.transform);
+			Placeable placeableGO = GameObject.Instantiate(placeablePrototype, placeableContainer);
 			placeableGO.transform.position = placeable.ReturnOriginalPosition ();
 			placeableGO.GetComponent<Placeable>().SetData(placeable);
 			placeableGO.gameObject.AddComponent<AnimatedObject>().SetData(placeableGO.pData);
-//			placeableGO.GetComponent<AnimatedObject>().SetData(placeableGO.pData.AnimationData);
-//			if (placeableGO.GetComponent<PassableObstacle>() != null)
-//			{
-//				placeableGO.GetComponent<PassableObstacle>().SetData(ActiveLevel.passableObjectDataLink[placeable]);
-//			}
+		}
+	}
+
+
+	public static IEnumerator CreateLevel(LevelData levelData){
+		DestroyCurrentLevel ();
+		LoadPlaceables ();
+		yield return null;
+		GameObject levelGameObject = CreateLevelBase ();
+		yield return null;
+		Level newLevel = levelGameObject.GetComponent<Level>();
+		newLevel.InitializeLevelData (levelData);
+
+		yield return null;
+		BuildLevelPlaceables(newLevel);
+		yield return null;
+		AppendChildren (newLevel);
+		newLevel.SetCameraSize ();
+		SetLevel(newLevel);	
+	}
+	public static void AppendChildren(Level level){
+		foreach (var placeable in level.levelData.placeables)
+		{
+			Placeable currentPlaceable = GameObject.FindObjectsOfType<Placeable>().FirstOrDefault(p => p.ID == placeable.ID);
+			if (placeable.ParentID != -1){
+				Placeable placeableParent = GameObject.FindObjectsOfType<Placeable>().FirstOrDefault(p => p.ID == placeable.ParentID);
+				currentPlaceable.transform.SetParent (placeableParent.transform);
+
+			}
 		}
 	}
 	public static void AddGameLevel(LevelData levelData){

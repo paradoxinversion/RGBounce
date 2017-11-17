@@ -100,7 +100,7 @@ public class Placeable : MonoBehaviour
 		AnimationControlsWidget animationControls = GameObject.FindObjectOfType<AnimationControlsWidget> ();
 		if (editor != null){
 			
-			if (editor.ParentModeEnabled){
+			if (editor.ParentModeEnabled && editor.CurrentSelection.ID != ID){
 				// If parenting is enabled...
 				editor.SetPlaceableParent(editor.CurrentSelection, this);
 
