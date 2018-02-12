@@ -12,13 +12,8 @@ public class PaddleData
 	public float lowPowerForce = 20;
 	public float horizontalForce;
 	public float horizontalForceMultiplier = 1f;
-	public float maxTilt;
-	public float tiltMaxDegreesDelta = 45f;
-	/// <summary>
-	/// Used in paddle tilt function to exaggerate angle in order to produce a useful tilt angle 
-	/// </summary>
-	public float angleMultiplier = 2;
-	public float timeMultiplier = 10;
+	public float maxTilt = 45f;
+
 
 	/// <summary>
 	/// What color mode is the paddle in?

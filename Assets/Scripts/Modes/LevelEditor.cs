@@ -68,6 +68,13 @@ public class LevelEditor : MonoBehaviour{
 			return cameraSizeStep;
 		}
 	}
+
+	private Paddle paddle = null;
+	public Paddle CurrentPaddle{
+		get {
+			return paddle;
+		}
+	}
 	void Update(){
 		HandleKeys ();
 	}
@@ -198,5 +205,20 @@ public class LevelEditor : MonoBehaviour{
 
 	public void SetObjectScaleStep(float newScaleStep){
 		objectScaleStep = newScaleStep;
+	}
+
+	public void TestLevel(){
+		/// We need to...
+		/// Clear the current UI
+		/// switch to a widget with a stop test button
+		if(CurrentLevel.levelData.LevelReady()){
+			CurrentLevel.LoadPaddle ();
+			CurrentLevel.LoadSpawner ();
+			CurrentLevel.StartSpawner ();
+
+		} else {
+			Debug.Log("No spawner in level");
+		}
+
 	}
 }

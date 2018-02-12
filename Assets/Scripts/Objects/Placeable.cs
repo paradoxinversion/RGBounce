@@ -3,6 +3,10 @@ using System.Collections;
 
 public class Placeable : MonoBehaviour
 {
+	/// <summary>
+	/// If true, placeable's collider is inactive during play
+	/// </summary>
+	public bool passable;
 	[SerializeField]
 	PlaceableData _pData;
 	public PlaceableData pData

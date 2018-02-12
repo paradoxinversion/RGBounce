@@ -9,10 +9,31 @@ public enum LevelAnimationStatus{
 public class Level : MonoBehaviour
 {
 	public Paddle paddle;
+	public SpawnController spawnController;
 	public const float PaddleYPosition = 0.05f;
 	public LevelData levelData;
 	public LevelAnimationStatus animationStatus = LevelAnimationStatus.STOPPED_OR_NONE;
-
+	/// <summary>
+	/// Is the level in a testing mode? 
+	/// </summary>	
+	public bool testMode;
+	/// <summary>
+	/// Have level boundaries been created yet?
+	/// This mostly matters if testMode is true
+	/// </summary>
+	private bool boundariesCreated;
+	/// <summary>
+	/// Start is called on the frame when a script is enabled just before
+	/// any of the Update methods is called the first time.
+	/// </summary>
+	void Start()
+	{
+		if (testMode){
+			GenerateEdgeColliders();
+			LoadPaddle();
+		}
+			
+	}
 	public void SetCameraSize(){
 		if (levelData != null){
 			Camera.main.orthographicSize = levelData.CameraSize;
@@ -25,6 +46,17 @@ public class Level : MonoBehaviour
 		paddle = Instantiate(GameResources.GetPaddle (), new Vector3(0, adjustedY, transform.position.z), Quaternion.identity) as Paddle;
 	}
 
+
+	public void LoadSpawner(){
+		if (levelData.LevelReady()){
+			// Load the Spawn Controller from Resources and Instantiate
+			spawnController = Instantiate(GameResources.LoadSpawnController()) as SpawnController;
+		}
+	}
+
+	public void StartSpawner(){
+		spawnController.SpawnLevelBalls ();
+	}
 	/// <summary>
 	/// Creates a new LevelData instance with default values.
 	/// </summary>
@@ -40,7 +72,6 @@ public class Level : MonoBehaviour
 	/// <returns>The level data.</returns>
 	/// <param name="levelData">Level data.</param>
 	public LevelData InitializeLevelData(LevelData levelData){
-		Debug.Log ("Setting Level Data");
 		this.levelData = levelData;
 		return levelData;
 	}
@@ -121,8 +152,8 @@ public class Level : MonoBehaviour
 //	public void ConnectChildren(){
 //		LevelManager.AppendChildren (this);
 //	}
-	void Update ()
-	{
+	public Placeable GetSpawnPoint(){
+		return GameObject.Find ("Ball Spawner(Clone)").GetComponent<Placeable>();
 	}
 }
 

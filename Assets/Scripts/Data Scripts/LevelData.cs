@@ -55,5 +55,14 @@ public class LevelData
 	public void SetCameraSize(float newSize){
 		cameraSize = newSize;
 	}
+
+	/// <summary>
+	/// Checks that the level is prepared. Returns false if there is no spawner.
+	/// </summary>
+	public bool LevelReady(){
+		if (placeables.FirstOrDefault (placeable => placeable.ObstacleName == "Ball Spawner") != null)
+			return true;
+		return false;
+	}
 }
 

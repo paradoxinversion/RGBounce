@@ -231,8 +231,50 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1421659019
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4146717121583806, guid: e119c7c65f2a747c1bfc5f6a6c87bd40, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0.033846587
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146717121583806, guid: e119c7c65f2a747c1bfc5f6a6c87bd40, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 2.257568
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146717121583806, guid: e119c7c65f2a747c1bfc5f6a6c87bd40, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146717121583806, guid: e119c7c65f2a747c1bfc5f6a6c87bd40, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146717121583806, guid: e119c7c65f2a747c1bfc5f6a6c87bd40, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146717121583806, guid: e119c7c65f2a747c1bfc5f6a6c87bd40, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146717121583806, guid: e119c7c65f2a747c1bfc5f6a6c87bd40, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4146717121583806, guid: e119c7c65f2a747c1bfc5f6a6c87bd40, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: e119c7c65f2a747c1bfc5f6a6c87bd40, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1970646164
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,6 +303,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   paddle: {fileID: 0}
+  spawnController: {fileID: 0}
+  levelData:
+    levelName: 
+    placeables: []
+    cameraSize: 0
+  animationStatus: 0
+  testMode: 1
 --- !u!4 &1970646166
 Transform:
   m_ObjectHideFlags: 0
@@ -272,5 +321,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

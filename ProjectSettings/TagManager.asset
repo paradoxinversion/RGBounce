@@ -8,6 +8,7 @@ TagManager:
   - level
   - placeable
   - placeable container
+  - ball
   layers:
   - Default
   - TransparentFX
