@@ -63,7 +63,7 @@ public class Paddle : MonoBehaviour, IColorChanger {
 	void handlePaddleRotation(float mousePositionDifference){
 		float rotationAngle = -Mathf.Clamp(mousePositionDifference, -paddle.maxTilt, paddle.maxTilt);
 		Quaternion targetRotation = Quaternion.Euler(0, 0, rotationAngle);
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 25.0f);
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * paddle.tiltTimeMultiplier);
 	}
 	void Update(){
 		paddle.ModeSelect();

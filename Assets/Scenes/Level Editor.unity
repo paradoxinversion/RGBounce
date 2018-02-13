@@ -1118,7 +1118,7 @@ Prefab:
     - target: {fileID: 224078880800486360, guid: 76d74ccea73fc4beca1cc979b71ac0c0,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -50
+      value: -760.995
       objectReference: {fileID: 0}
     - target: {fileID: 224233444080028064, guid: 76d74ccea73fc4beca1cc979b71ac0c0,
         type: 2}
@@ -1128,7 +1128,7 @@ Prefab:
     - target: {fileID: 224233444080028064, guid: 76d74ccea73fc4beca1cc979b71ac0c0,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -110
+      value: -775.995
       objectReference: {fileID: 0}
     - target: {fileID: 224145250390696178, guid: 76d74ccea73fc4beca1cc979b71ac0c0,
         type: 2}
@@ -1138,7 +1138,7 @@ Prefab:
     - target: {fileID: 224145250390696178, guid: 76d74ccea73fc4beca1cc979b71ac0c0,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -80
+      value: -444
       objectReference: {fileID: 0}
     - target: {fileID: 224373585941731624, guid: 76d74ccea73fc4beca1cc979b71ac0c0,
         type: 2}
@@ -1158,7 +1158,7 @@ Prefab:
     - target: {fileID: 224105771504899654, guid: 76d74ccea73fc4beca1cc979b71ac0c0,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -20
+      value: -449
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 76d74ccea73fc4beca1cc979b71ac0c0, type: 2}
@@ -1690,7 +1690,7 @@ Prefab:
     - target: {fileID: 224900560763999526, guid: de340e0d0c1db46a58625a2ec505f785,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -384
       objectReference: {fileID: 0}
     - target: {fileID: 114811406188592078, guid: de340e0d0c1db46a58625a2ec505f785,
         type: 2}
@@ -2858,6 +2858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e35e5bb547d14d3e96c28b8eede908e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  commandPalette: {fileID: 189457841}
   animationCommands: {fileID: 770075230}
   levelCommands: {fileID: 1979116423}
   placeableCommands: {fileID: 377363558}
@@ -4531,7 +4532,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: Test
 --- !u!222 &1636347951
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5078,6 +5079,7 @@ MonoBehaviour:
     placeables: []
     cameraSize: 0
   animationStatus: 0
+  testMode: 0
 --- !u!4 &1970646166
 Transform:
   m_ObjectHideFlags: 0
@@ -5447,8 +5449,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 979012288}
-        m_MethodName: btn_StopTest
+      - m_Target: {fileID: 1184802488}
+        m_MethodName: StopTest
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

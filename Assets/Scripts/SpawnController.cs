@@ -157,6 +157,9 @@ public class SpawnController : MonoBehaviour {
 			}
 			yield return null;
 		}
+	}
 
+	public void StopSpawner(){
+		StopAllCoroutines();
 	}
 }

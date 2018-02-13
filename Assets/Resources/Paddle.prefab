@@ -85,13 +85,10 @@ MonoBehaviour:
     midPowerForce: 35
     lowPowerForce: 10
     horizontalForce: 0
-    horizontalForceMultiplier: 6
-    maxTilt: 0
-    tiltMaxDegreesDelta: 45
-    angleMultiplier: 2
-    timeMultiplier: 10
+    horizontalForceMultiplier: 17
+    maxTilt: 45
+    tiltTimeMultiplier: 25
     paddleActive: 1
-  test: {x: 0, y: 0, z: 0}
   yPosition: 0.05
 --- !u!212 &212901914322845202
 SpriteRenderer:

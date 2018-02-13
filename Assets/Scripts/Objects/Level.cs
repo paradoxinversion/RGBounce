@@ -21,19 +21,15 @@ public class Level : MonoBehaviour
 	/// Have level boundaries been created yet?
 	/// This mostly matters if testMode is true
 	/// </summary>
-	private bool boundariesCreated;
-	/// <summary>
-	/// Start is called on the frame when a script is enabled just before
-	/// any of the Update methods is called the first time.
-	/// </summary>
-	void Start()
-	{
+	
+	void Start(){
 		if (testMode){
 			GenerateEdgeColliders();
 			LoadPaddle();
 		}
 			
 	}
+
 	public void SetCameraSize(){
 		if (levelData != null){
 			Camera.main.orthographicSize = levelData.CameraSize;
@@ -42,10 +38,13 @@ public class Level : MonoBehaviour
 
 	public void LoadPaddle(){
 		float adjustedY = Camera.main.ViewportToWorldPoint ( new Vector3(transform.position.x, PaddleYPosition, transform.position.z)).y;
-
 		paddle = Instantiate(GameResources.GetPaddle (), new Vector3(0, adjustedY, transform.position.z), Quaternion.identity) as Paddle;
 	}
 
+	public void DestroyPaddle(){
+		Destroy(paddle.gameObject);
+		StopPlaceableAnimations();
+	}
 
 	public void LoadSpawner(){
 		if (levelData.LevelReady()){
@@ -56,6 +55,11 @@ public class Level : MonoBehaviour
 
 	public void StartSpawner(){
 		spawnController.SpawnLevelBalls ();
+	}
+
+	public void StopSpawner(){
+		spawnController.StopSpawner();
+		spawnController.DestroyAllBalls();
 	}
 	/// <summary>
 	/// Creates a new LevelData instance with default values.
@@ -79,6 +83,11 @@ public class Level : MonoBehaviour
 	/// Creates wall and ceiling colliders, as well as a killzone floor collider
 	/// </summary>
 	public void GenerateEdgeColliders(){
+		GameObject boundaries = GameObject.Find("Boundaries");
+		if (boundaries != null){
+			Destroy(boundaries);
+		}
+		GameObject boundaryContainer = new GameObject("Boundaries");
 		Vector2 topLeft = Camera.main.ViewportToWorldPoint (new Vector3 (0, 1, 0));
 		Vector2 topRight = Camera.main.ViewportToWorldPoint (new Vector3 (1, 1, 0));
 		Vector2 bottomRight = Camera.main.ViewportToWorldPoint (new Vector3 (1, 0, 0));
@@ -94,6 +103,7 @@ public class Level : MonoBehaviour
 			bottomLeft,
 			bottomRight
 		};
+
 		GameObject edgeColliderObject = new GameObject ("Edge Collider");
 		EdgeCollider2D wallCollider = edgeColliderObject.AddComponent<EdgeCollider2D> ();
 		wallCollider.points = wallColliderPoints;
@@ -103,8 +113,9 @@ public class Level : MonoBehaviour
 		killZoneCollider.points = killZoneColliderPoints;
 		killZoneCollider.tag = "killzone";
 
-		edgeColliderObject.transform.SetParent (transform);
-		killZone.transform.SetParent (transform);
+		edgeColliderObject.transform.SetParent (boundaryContainer.transform);
+		killZone.transform.SetParent (boundaryContainer.transform);
+		boundaryContainer.transform.SetParent(transform);
 	}
 	public void StartPlaceableAnimations(){
 		GameObject[] placeables = GameObject.FindGameObjectsWithTag ("placeable");
@@ -144,6 +155,7 @@ public class Level : MonoBehaviour
 		}
 		animationStatus = LevelAnimationStatus.RUNNING;
 	}
+
 	public Placeable GetPleaceableByID(int id)
 	{
 		return GameObject.FindObjectsOfType<Placeable>().FirstOrDefault(e => e.ID == e.ID);

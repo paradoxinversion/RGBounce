@@ -36,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1483318018561474}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.8650208, y: -1.4636059, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -66,14 +66,18 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.13333334, y: 0.8333334}
-      - {x: -0.8333334, y: 0.13333334}
-      - {x: -0.8333334, y: -0.13333334}
-      - {x: -0.13333334, y: -0.8333334}
-      - {x: 0.13333334, y: -0.8333334}
-      - {x: 0.8333334, y: -0.13333334}
-      - {x: 0.8333334, y: 0.13333334}
-      - {x: 0.13333334, y: 0.8333334}
+    - - {x: -0.10140216, y: 0.8333334}
+      - {x: -0.100504756, y: 0.10086775}
+      - {x: -0.83206666, y: 0.10039878}
+      - {x: -0.8327, y: -0.10039878}
+      - {x: -0.10016942, y: -0.10106206}
+      - {x: -0.09994495, y: -0.8333335}
+      - {x: 0.10126865, y: -0.8318064}
+      - {x: 0.10091472, y: -0.1003834}
+      - {x: 0.8342247, y: -0.10079825}
+      - {x: 0.8337791, y: 0.100352526}
+      - {x: 0.10069454, y: 0.09993923}
+      - {x: 0.10054362, y: 0.8328184}
 --- !u!114 &114254992624371526
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -85,6 +89,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7500d580415334b439ab4f336552377f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  passable: 0
+  _pData:
+    ObstacleName: 
+    typeStr: 
+    ColorMode: 0
+    parentID: 0
+    id: 0
+    animationData:
+      xDestination: 0
+      useX: 0
+      yDestination: 0
+      useY: 0
+      movementTime: 0
+      movementDelay: 0
+      movementEaseType: 0
+      movementLoopType: 0
+      clockwise: 0
+      roationDegrees: 0
+      rotationTime: 0
+      rotationType: 0
+      rotationDelay: 0
+      rotationEaseType: 0
+      rotationLoopType: 0
+    originalPositionX: 0
+    originalPositionY: 0
+    originalRotationW: 0
+    originalRotationX: 0
+    originalRotationY: 0
+    originalRotationZ: 0
+    originalScaleX: 0
+    originalScaleY: 0
+    currentPositionX: 0
+    currentPositionY: 0
+    currentRotationW: 0
+    currentRotationX: 0
+    currentRotationY: 0
+    currentRotationZ: 0
+    currentScaleX: 0
+    currentScaleY: 0
 --- !u!212 &212026360382053856
 SpriteRenderer:
   m_ObjectHideFlags: 1

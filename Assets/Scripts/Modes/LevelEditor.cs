@@ -103,11 +103,13 @@ public class LevelEditor : MonoBehaviour{
 		float currentSize = CurrentLevel.levelData.CameraSize;
 		Camera.main.orthographicSize = currentSize + CameraSizeStep;
 		CurrentLevel.levelData.SetCameraSize (Camera.main.orthographicSize);
+		CurrentLevel.GenerateEdgeColliders();
 	}
 	public void ShrinkLevelArea(){
 		float currentSize = CurrentLevel.levelData.CameraSize;
 		Camera.main.orthographicSize = currentSize - CameraSizeStep;
 		CurrentLevel.levelData.SetCameraSize (Camera.main.orthographicSize);
+		CurrentLevel.GenerateEdgeColliders();
 
 	}
 	/// <summary>
@@ -211,14 +213,27 @@ public class LevelEditor : MonoBehaviour{
 		/// We need to...
 		/// Clear the current UI
 		/// switch to a widget with a stop test button
+		GameObject commandPalette = GameObject.Find("Command Palette");
+		LevelEditorUI levelEditorUI = GameObject.FindObjectOfType<LevelEditorUI>();
 		if(CurrentLevel.levelData.LevelReady()){
 			CurrentLevel.LoadPaddle ();
 			CurrentLevel.LoadSpawner ();
 			CurrentLevel.StartSpawner ();
-
+			commandPalette.SetActive(false);
+			levelEditorUI.HideAllCommands();
+			CurrentLevel.StartPlaceableAnimations();
 		} else {
 			Debug.Log("No spawner in level");
 		}
+	}
 
+	public void StopTest(){
+		LevelEditorUI levelEditorUI = GameObject.FindObjectOfType<LevelEditorUI>();
+		CurrentLevel.StopSpawner();
+		CurrentLevel.DestroyPaddle();
+		CurrentLevel.testMode = false;
+		levelEditorUI.commandPalette.SetActive(true);
+		levelEditorUI.ShowCommandPalette();
+		CurrentLevel.StopPlaceableAnimations();
 	}
 }
