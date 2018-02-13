@@ -9,10 +9,8 @@ public class Placeable : MonoBehaviour
 	public bool passable;
 	[SerializeField]
 	PlaceableData _pData;
-	public PlaceableData pData
-	{
-		get
-		{
+	public PlaceableData pData{
+		get{
 			if (_pData == null)
 				_pData = new PlaceableData("Placeable");
 			return _pData;
@@ -20,52 +18,41 @@ public class Placeable : MonoBehaviour
 		private set { _pData = value; }
 	}
 
-	public string ObjectName
-	{
+	public string ObjectName{
 		get {
 			return pData.ObstacleName;
 		}
 	}
 
-	public int ID
-	{
-		get
-		{
+	public int ID{
+		get{
 			return pData.ID;
 		}
 	}
 
-	public Vector2 OriginalPosition
-	{
-		get
-		{
+	public Vector2 OriginalPosition{
+		get{
 			return pData.ReturnOriginalPosition();
 		}
 	}
 
-	public Quaternion OriginalRotation
-	{
-		get
-		{
+	public Quaternion OriginalRotation{
+		get{
 			return pData.ReturnOriginalRotation();
 		}
 	}
 
-	public Vector3 OriginalScale
-	{
-		get
-		{
+	public Vector3 OriginalScale{
+		get{
 			return pData.ReturnOriginalScale();
 		}
 	}
 
-	public void SetDefaultPosition(Vector2 defaultPosition)
-	{
+	public void SetDefaultPosition(Vector2 defaultPosition){
 		pData.SetOriginalPosition(defaultPosition);
 	}
 
-	public void SetDefaultRotation(Quaternion defaultRotation)
-	{
+	public void SetDefaultRotation(Quaternion defaultRotation){
 		pData.SetOriginalRotation(defaultRotation);
 	}
 
@@ -74,16 +61,14 @@ public class Placeable : MonoBehaviour
 		pData.SetOriginalScale(defaultScale);
 	}
 
-	public void SetData(PlaceableData keyData)
-	{
+	public void SetData(PlaceableData keyData){
 		this.pData = keyData;
 	}
 
 	/// <summary>
 	/// Restores the placeable's original position, rotation, and scale.
 	/// </summary>
-	public void RestoreDefaults()
-	{
+	public void RestoreDefaults(){
 		transform.position = OriginalPosition;
 		transform.rotation = OriginalRotation;
 		transform.localScale = OriginalScale;
@@ -119,14 +104,10 @@ public class Placeable : MonoBehaviour
 
 		}
 	}
-	private void OnMouseDrag()
-	{
-		
-		MovePlaceableTEST();
-
+	private void OnMouseDrag(){
+		MovePlaceable();
 	}
-	public void MovePlaceableTEST()
-	{
+	public void MovePlaceable(){
 		float posX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
 		float posY = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
 		Vector2 pos = new Vector2(Mathf.Round(posX) * LevelEditConfig.gridScaleSize, Mathf.Round(posY) * LevelEditConfig.gridScaleSize) + LevelEditorOffset;
@@ -144,6 +125,18 @@ public class Placeable : MonoBehaviour
 		}
 		level.RemovePlaceableData (pData);
 		Destroy (gameObject);
+	}
+
+	/// <summary>
+	/// Sent when another object enters a trigger collider attached to this
+	/// object (2D physics only).
+	/// </summary>
+	/// <param name="other">The other Collider2D involved in this collision.</param>
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		
+		pData.ExecuteEffect(transform, other);
+		Debug.Log(transform.eulerAngles);
 	}
 }
 

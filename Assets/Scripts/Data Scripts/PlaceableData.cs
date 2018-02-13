@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+
+delegate void PlaceableEffect(Transform parentTransform, Collider2D other);
 /// <summary>
 /// Data representation of a solid obstacle in the game.
 /// </summary>
 [Serializable]
 public class PlaceableData
 {
+    
     public string ObstacleName;
 	public string typeStr;
     public int ColorMode;
@@ -119,5 +122,31 @@ public class PlaceableData
 	public void SetAnimationData(AnimatedObjectData newAnimationData){
 		animationData = newAnimationData;
 	}
+    public void TestMethod(Transform parentTranform, Collider2D other){
+		Debug.Log("Test Success");
+	}
+    public void Accelerate(Transform parentTranform, Collider2D other){
+        other.GetComponent<Rigidbody2D>().AddForce(parentTranform.up * 320);
+    }
+
+    public void Explode(Transform parentTranform, Collider2D other){
+        ExplosionForce2D.AddExplosionForce(other.GetComponent<Rigidbody2D>(), 3000, parentTranform.position, 1);
+    }
+
+    public void Pull(Transform parentTranform, Collider2D other){
+        ExplosionForce2D.AddExplosionForce(other.GetComponent<Rigidbody2D>(), -640, parentTranform.position, (parentTranform.localScale.x)*1.5f) ;
+    }
+    public void ExecuteEffect(Transform parentTranform, Collider2D other){
+        if (typeStr == "Accelerator"){
+            PlaceableEffect effect = new PlaceableEffect(Accelerate);
+            effect(parentTranform, other);
+        } else if (typeStr == "Exploder"){
+            PlaceableEffect effect = new PlaceableEffect(Explode);
+            effect(parentTranform, other);
+        } else if (typeStr == "Gravity Well"){
+            PlaceableEffect effect = new PlaceableEffect(Pull);
+            effect(parentTranform, other);
+        }
+    } 
 }
 

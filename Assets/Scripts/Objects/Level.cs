@@ -161,11 +161,9 @@ public class Level : MonoBehaviour
 		return GameObject.FindObjectsOfType<Placeable>().FirstOrDefault(e => e.ID == e.ID);
 	}
 
-//	public void ConnectChildren(){
-//		LevelManager.AppendChildren (this);
-//	}
+
 	public Placeable GetSpawnPoint(){
-		return GameObject.Find ("Ball Spawner(Clone)").GetComponent<Placeable>();
+		return GameObject.FindObjectsOfType<Placeable>().FirstOrDefault(placeable => placeable.pData.typeStr == "Ball Spawner");
 	}
 }
 

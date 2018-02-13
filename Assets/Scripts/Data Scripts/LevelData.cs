@@ -12,7 +12,6 @@ public class LevelData
 		get {
 			return totalCreatedObjects;
 		}
-
 		set {
 			if (value > totalCreatedObjects){
 				totalCreatedObjects = value;
@@ -63,6 +62,10 @@ public class LevelData
 		if (placeables.FirstOrDefault (placeable => placeable.ObstacleName == "Ball Spawner") != null)
 			return true;
 		return false;
+	}
+
+	public PlaceableData GetSpawnPoint(){
+		return placeables.FirstOrDefault(placeable => placeable.typeStr == "Ball Spawner");
 	}
 }
 
