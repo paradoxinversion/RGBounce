@@ -2,12 +2,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 [System.Serializable]
 public class LevelData 
 {
+	public EventHandler LevelUpdated;
 	public string levelName;
-	public List<PlaceableData> placeables = new List<PlaceableData>();
-	private int totalCreatedObjects;
+    private List<PlaceableData> placeables = new List<PlaceableData>();
+	public List<PlaceableData> Placeables
+    {
+        get
+        {
+            return placeables;
+        }
+
+        set
+        {
+            placeables = value;
+			OnLevelUpdated();
+        }
+    }
+
+    private int totalCreatedObjects;
 	public int TotalCreatedObjects{
 		get {
 			return totalCreatedObjects;
@@ -27,22 +43,42 @@ public class LevelData
 			return cameraSize;
 		}
 	}
-	public LevelData(string name = "New Level"){
-		levelName = name;
-		placeables = new List<PlaceableData> ();
+
+	private float keysRemaining;
+	public float KeysRemaining{
+		get {
+			return keysRemaining;
+		}
 	}
+    private VictoryConditionData victoryCondition;
+
+    public VictoryConditionData VictoryCondition {
+        get {
+            return victoryCondition;
+        }
+    }
+
+   
+    public LevelData(string name = "New Level"){
+		levelName = name;
+		Placeables = new List<PlaceableData> ();
+		victoryCondition = new VictoryConditionData(VictoryConditionData.Condition.KEYS, GatherKeys());
+	}
+
+	// XXX: If this is never called, why does it exist and what is serving its purpose?
 	public LevelData(LevelData data){
 		levelName = data.levelName;
-		placeables = data.placeables;
+		Placeables = data.Placeables;
+		victoryCondition = new VictoryConditionData(VictoryConditionData.Condition.KEYS, GatherKeys());
 	}
 	public void AddPlaceableData(PlaceableData placeableData){
 		placeableData.ID = totalCreatedObjects;
 
-		placeables.Add (placeableData);
+		Placeables.Add (placeableData);
 		totalCreatedObjects++;
 	}
 	public void RemovePlaceableData(PlaceableData placeableData){
-		placeables.Remove (placeableData);
+		Placeables.Remove (placeableData);
 	}
 
 	public void RenameLevel(string newName){
@@ -59,13 +95,37 @@ public class LevelData
 	/// Checks that the level is prepared. Returns false if there is no spawner.
 	/// </summary>
 	public bool LevelReady(){
-		if (placeables.FirstOrDefault (placeable => placeable.ObstacleName == "Ball Spawner") != null)
+		if (Placeables.FirstOrDefault (placeable => placeable.ObstacleName == "Ball Spawner") != null)
 			return true;
 		return false;
 	}
 
 	public PlaceableData GetSpawnPoint(){
-		return placeables.FirstOrDefault(placeable => placeable.typeStr == "Ball Spawner");
+		return Placeables.FirstOrDefault(placeable => placeable.typeStr == "Ball Spawner");
+	}
+
+	public void GetKey(){
+		keysRemaining--;
+		Debug.Log(keysRemaining);
+	}
+	private bool isKey(PlaceableData pData){
+		if (pData.typeStr == "Key"){
+			return true;
+		}
+		return false;
+	}
+	/// <summary>
+	/// Counts the amount of keys in Placeables and sets the value as keysRemaining
+	/// </summary>
+	public int GatherKeys(){
+		int keys = Placeables.FindAll(isKey).Count;
+		keysRemaining = keys;
+		return keys;
+	}
+
+	protected virtual void OnLevelUpdated(){
+		if (LevelUpdated != null)
+			LevelUpdated(this, EventArgs.Empty);
 	}
 }
 

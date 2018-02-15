@@ -122,30 +122,27 @@ public class PlaceableData
 	public void SetAnimationData(AnimatedObjectData newAnimationData){
 		animationData = newAnimationData;
 	}
-    public void TestMethod(Transform parentTranform, Collider2D other){
-		Debug.Log("Test Success");
-	}
-    public void Accelerate(Transform parentTranform, Collider2D other){
-        other.GetComponent<Rigidbody2D>().AddForce(parentTranform.up * 320);
-    }
 
-    public void Explode(Transform parentTranform, Collider2D other){
-        ExplosionForce2D.AddExplosionForce(other.GetComponent<Rigidbody2D>(), 3000, parentTranform.position, 1);
-    }
-
-    public void Pull(Transform parentTranform, Collider2D other){
-        ExplosionForce2D.AddExplosionForce(other.GetComponent<Rigidbody2D>(), -640, parentTranform.position, (parentTranform.localScale.x)*1.5f) ;
-    }
+    
     public void ExecuteEffect(Transform parentTranform, Collider2D other){
         if (typeStr == "Accelerator"){
-            PlaceableEffect effect = new PlaceableEffect(Accelerate);
+            PlaceableEffect effect = new PlaceableEffect(PlaceableEffects.Accelerate);
             effect(parentTranform, other);
         } else if (typeStr == "Exploder"){
-            PlaceableEffect effect = new PlaceableEffect(Explode);
+            PlaceableEffect effect = new PlaceableEffect(PlaceableEffects.Explode);
             effect(parentTranform, other);
         } else if (typeStr == "Gravity Well"){
-            PlaceableEffect effect = new PlaceableEffect(Pull);
+            PlaceableEffect effect = new PlaceableEffect(PlaceableEffects.Pull);
             effect(parentTranform, other);
+        } else if (typeStr == "Score Zone"){
+            PlaceableEffect effect = new PlaceableEffect(PlaceableEffects.GrantPoints);
+            effect(null, null);
+        } else if (typeStr == "Slow Time"){
+            TimeManager tm = GameObject.FindObjectOfType<TimeManager>();
+            TimeManager.SlowTime(tm);
+        } else if (typeStr == "Key"){
+            PlaceableEffect effect = new PlaceableEffect(PlaceableEffects.GetKey);
+            effect(parentTranform, null);
         }
     } 
 }

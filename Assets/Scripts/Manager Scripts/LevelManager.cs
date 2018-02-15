@@ -10,6 +10,7 @@ using UnityEngine;
 /// </summary>
 public static class LevelManager
 {
+	public static EventHandler LevelLoaded;
 	/// <summary>
 	/// A list of all level Placeable prefabs...
 	/// MIGHT BE DEPRECATED
@@ -52,6 +53,7 @@ public static class LevelManager
 		}
 	}
 
+	# region Placeable Methods
 	/// <summary>
 	/// Loads Placeables from the resources folder and sets them to the 
 	/// </summary>
@@ -75,6 +77,77 @@ public static class LevelManager
 		}
 	}
 
+	public static void BuildLevelPlaceables(Level level){
+		Transform placeableContainer = GameObject.FindGameObjectWithTag ("placeable container").transform;
+		foreach (var placeable in level.levelData.Placeables){
+			Placeable placeablePrototype = placeables.FirstOrDefault (p => p.name == placeable.typeStr);
+			Placeable placeableGO = GameObject.Instantiate(placeablePrototype, placeableContainer);
+			placeableGO.transform.position = placeable.ReturnOriginalPosition ();
+			placeableGO.GetComponent<Placeable>().SetData(placeable);
+			placeableGO.gameObject.AddComponent<AnimatedObject>().SetData(placeableGO.pData);
+		}
+	}
+	/// <summary>
+	/// Append placeable children to their parents.
+	/// </summary>
+	/// <param name="level"></param>
+	public static void AppendChildren(Level level){
+		foreach (var placeable in level.levelData.Placeables){
+			Placeable currentPlaceable = GameObject.FindObjectsOfType<Placeable>().FirstOrDefault(p => p.ID == placeable.ID);
+			if (placeable.ParentID != -1){
+				Placeable placeableParent = GameObject.FindObjectsOfType<Placeable>().FirstOrDefault(p => p.ID == placeable.ParentID);
+				currentPlaceable.transform.SetParent (placeableParent.transform);
+
+			}
+		}
+	}
+	# endregion
+	
+	# region Level Game Object Creation
+	public static GameObject CreateLevelBase(){
+		GameObject levelGameObject = new GameObject ("Base Level");
+		levelGameObject.tag = "level";
+		Level newLevel = levelGameObject.AddComponent<Level> ();
+
+		GameObject placeableContainer = new GameObject ("Placeable Container");
+		placeableContainer.tag = "placeable container";
+		placeableContainer.transform.SetParent (levelGameObject.transform);
+
+		newLevel.GenerateEdgeColliders ();
+		return levelGameObject;
+	}
+
+	public static IEnumerator CreateLevel(LevelData levelData){
+		DestroyCurrentLevel ();
+		LoadPlaceables ();
+		yield return null;
+		GameObject levelGameObject = CreateLevelBase ();
+		yield return null;
+		Level newLevel = levelGameObject.GetComponent<Level>();
+		newLevel.InitializeLevelData (levelData);
+
+		yield return null;
+		BuildLevelPlaceables(newLevel);
+		yield return null;
+		AppendChildren (newLevel);
+		newLevel.SetCameraSize ();
+		SetLevel(newLevel);	
+		OnLevelLoaded();
+	}
+
+	public static GameObject CreateNewLevel(){
+		GameObject levelGameObject = CreateLevelBase();
+		Level newLevel = levelGameObject.GetComponent<Level>();
+		newLevel.InitializeLevelData ();
+		newLevel.gameObject.name = newLevel.levelData.levelName;
+		SetLevel(newLevel);
+		newLevel.SetCameraSize ();
+		OnLevelLoaded();
+		return levelGameObject;
+	}
+	# endregion
+
+	# region Level Save and Load
 	public static void SaveLevelData(){
 		//save level data out to files?
 		DataPersistence.SaveLevelData();
@@ -95,7 +168,9 @@ public static class LevelManager
 			}
 		}
 	}
-
+	# endregion
+	
+	# region Level Update and Modification
 	/// <summary>
 	/// Changes a level's index in the list. Bumps Everything forward
 	/// </summary>
@@ -121,56 +196,6 @@ public static class LevelManager
 		currentLevelGameObject = level;
 	}
 
-	public static GameObject CreateLevelBase(){
-		GameObject levelGameObject = new GameObject ("Base Level");
-		levelGameObject.tag = "level";
-		Level newLevel = levelGameObject.AddComponent<Level> ();
-
-		GameObject placeableContainer = new GameObject ("Placeable Container");
-		placeableContainer.tag = "placeable container";
-		placeableContainer.transform.SetParent (levelGameObject.transform);
-
-		newLevel.GenerateEdgeColliders ();
-		return levelGameObject;
-	}
-
-	public static void BuildLevelPlaceables(Level level){
-		Transform placeableContainer = GameObject.FindGameObjectWithTag ("placeable container").transform;
-		foreach (var placeable in level.levelData.placeables){
-			Placeable placeablePrototype = placeables.FirstOrDefault (p => p.name == placeable.typeStr);
-			Placeable placeableGO = GameObject.Instantiate(placeablePrototype, placeableContainer);
-			placeableGO.transform.position = placeable.ReturnOriginalPosition ();
-			placeableGO.GetComponent<Placeable>().SetData(placeable);
-			placeableGO.gameObject.AddComponent<AnimatedObject>().SetData(placeableGO.pData);
-		}
-	}
-
-	public static IEnumerator CreateLevel(LevelData levelData){
-		DestroyCurrentLevel ();
-		LoadPlaceables ();
-		yield return null;
-		GameObject levelGameObject = CreateLevelBase ();
-		yield return null;
-		Level newLevel = levelGameObject.GetComponent<Level>();
-		newLevel.InitializeLevelData (levelData);
-
-		yield return null;
-		BuildLevelPlaceables(newLevel);
-		yield return null;
-		AppendChildren (newLevel);
-		newLevel.SetCameraSize ();
-		SetLevel(newLevel);	
-	}
-	public static void AppendChildren(Level level){
-		foreach (var placeable in level.levelData.placeables){
-			Placeable currentPlaceable = GameObject.FindObjectsOfType<Placeable>().FirstOrDefault(p => p.ID == placeable.ID);
-			if (placeable.ParentID != -1){
-				Placeable placeableParent = GameObject.FindObjectsOfType<Placeable>().FirstOrDefault(p => p.ID == placeable.ParentID);
-				currentPlaceable.transform.SetParent (placeableParent.transform);
-
-			}
-		}
-	}
 	public static void AddGameLevel(LevelData levelData){
 		if (!gameLevels.Contains(levelData)){
 			gameLevels.Add (levelData);
@@ -179,14 +204,27 @@ public static class LevelManager
 		}
 	}
 
-	public static void SetGameLevels(List<LevelData> levels){
-		gameLevels = levels;
-	}
-
 	public static void DestroyCurrentLevel(){
 		if (currentLevelGameObject != null){
 			GameObject.Destroy(currentLevelGameObject.gameObject);	
 		}
+	}
+	# endregion
+
+	public static void SetGameLevels(List<LevelData> levels){
+		gameLevels = levels;
+	}
+
+	public static void OnLevelLoaded(){
+		if (LevelLoaded != null)
+			LevelLoaded(typeof(LevelManager), EventArgs.Empty);
+	}
+
+	public static void OnPlaceablePainted(object source, PlaceablePaintedEventArgs args){
+		if (args.NewPlaceable.pData.typeStr == "Key"){
+			ActiveLevel.GatherKeys();
+		}
+		Debug.Log(args.NewPlaceable.pData.ObstacleName);
 	}
 }
 

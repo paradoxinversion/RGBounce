@@ -1,7 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+public class PlaceablePaintedEventArgs : EventArgs {
+	public Placeable NewPlaceable {get; set;}
+}
 public class LevelEditor : MonoBehaviour{
+	public EventHandler LevelEditorLoading;
+	public EventHandler<PlaceablePaintedEventArgs> PlaceablePainted;
 	/// <summary>
 	/// Returns a reference to the Level Manager's current level.
 	/// </summary>
@@ -38,6 +44,9 @@ public class LevelEditor : MonoBehaviour{
 	}
 
 	void Start(){
+		OnLevelEditorLoading();
+		LevelManager.LevelLoaded += OnLevelLoaded;
+		PlaceablePainted += LevelManager.OnPlaceablePainted;
 		DataPersistence.LoadLevelData ();
 		GameObject.FindObjectOfType< LevelSelectWidget_Editor> ().PopulateDropdown ();
 		if (LevelManager.GameLevels.Count > 0){
@@ -91,12 +100,7 @@ public class LevelEditor : MonoBehaviour{
 		if (CurrentLevel != null){
 			LevelManager.DestroyCurrentLevel ();
 		}
-		GameObject levelGameObject = LevelManager.CreateLevelBase();
-		Level newLevel = levelGameObject.GetComponent<Level>();
-		newLevel.InitializeLevelData ();
-		newLevel.gameObject.name = newLevel.levelData.levelName;
-		LevelManager.SetLevel(newLevel);
-		newLevel.SetCameraSize ();
+		LevelManager.CreateNewLevel();
 	}
 
 	public void GrowLevelArea(){
@@ -127,7 +131,7 @@ public class LevelEditor : MonoBehaviour{
 		newPlaceable.gameObject.name = placeable.gameObject.name + " " + newPlaceable.pData.ID;
 		AnimatedObject animation = newPlaceable.gameObject.AddComponent<AnimatedObject> ();
 		animation.SetData (newPlaceable.pData);
-
+		OnPlaceablePainted(newPlaceable);
 		return newPlaceable;
 	}
 
@@ -203,6 +207,7 @@ public class LevelEditor : MonoBehaviour{
 
 	public void LoadLevel(LevelData data){
 		StartCoroutine(LevelManager.CreateLevel(data));
+		
 	}
 
 	public void SetObjectScaleStep(float newScaleStep){
@@ -219,6 +224,7 @@ public class LevelEditor : MonoBehaviour{
 			CurrentLevel.LoadPaddle ();
 			CurrentLevel.LoadSpawner ();
 			CurrentLevel.StartSpawner ();
+			CurrentLevel.levelData.GatherKeys();
 			commandPalette.SetActive(false);
 			levelEditorUI.HideAllCommands();
 			CurrentLevel.StartPlaceableAnimations();
@@ -235,5 +241,19 @@ public class LevelEditor : MonoBehaviour{
 		levelEditorUI.commandPalette.SetActive(true);
 		levelEditorUI.ShowCommandPalette();
 		CurrentLevel.StopPlaceableAnimations();
+	}
+
+	protected virtual void OnLevelEditorLoading(){
+		if (LevelEditorLoading != null)
+			LevelEditorLoading(this, EventArgs.Empty);
+	}
+
+	protected virtual void OnLevelLoaded(object source, EventArgs e){
+		Debug.Log("Level Was Loaded");
+	}
+
+	protected virtual void OnPlaceablePainted(Placeable placeable){
+		if (PlaceablePainted != null)
+			PlaceablePainted(this, new PlaceablePaintedEventArgs(){NewPlaceable = placeable});
 	}
 }
